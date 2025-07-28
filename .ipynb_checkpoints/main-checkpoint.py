@@ -21,7 +21,7 @@ scaler = MinMaxScaler()
 # Modelo da requisição
 class PriceRequest(BaseModel):
     closes: list[float]  # Últimos 60 preços
-    n_dias: int = 7       # Dias que o usuário quer prever (padrão = 7)
+    n_dias: int = 1      # Dias que o usuário quer prever (padrão = 7)
 
 @app.post("/predict")
 def predict_price(request: PriceRequest):
