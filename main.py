@@ -49,3 +49,20 @@ def predict_price(request: PriceRequest):
         "preco_previsto": round(float(pred[0][0]), 2),
         "tempo_resposta_segundos": tempo_resposta
     }
+
+
+
+@app.post("/predict7")
+def predict_next_7_days(data: InputData):
+    sequence = data.closes.copy()
+    if len(sequence) != 60:
+        return {"error": "A sequência precisa ter exatamente 60 valores."}
+
+    preds = []
+    for _ in range(7):
+        input_data = np.array(sequence[-60:]).reshape(1, 60, 1)
+        pred = model.predict(input_data, verbose=0)[0][0]
+        preds.append(float(pred))
+        sequence.append(pred)  # Adiciona a previsão para próxima iteração
+
+    return {"next_7_days": preds}
